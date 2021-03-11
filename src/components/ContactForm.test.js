@@ -3,6 +3,7 @@ import {render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import ContactForm from './ContactForm';
+import { Controller } from 'react-hook-form';
 
 test('renders without errors', () => {
     //Arrange
@@ -107,7 +108,24 @@ test('renders "lastName is a required field" if an last name is not entered and 
 });
 
 test('renders all firstName, lastName and email text when submitted. Does NOT render message if message is not submitted.', async () => {
+    //Arrange
+    render(<ContactForm />);
     
+    //Act
+    const fnameInput = screen.getByLabelText("First Name*");
+    const lnameInput = screen.getByLabelText("Last Name*");
+    const emailInput = screen.getByLabelText("Email*");
+    const submitButton = screen.getByTestId("submit");
+
+    userEvent.type(fnameInput, "Alexis");
+    userEvent.type(lnameInput, "Marroquin");
+    userEvent.type(emailInput, "alexis@domain.com");
+    userEvent.click(submitButton);
+    
+    const message = screen.queryByTestId("messageDisplay");
+    
+    //Assert
+    expect(message === null).toBeTruthy();
 });
 
 test('renders all fields text when all fields are submitted.', async () => {
